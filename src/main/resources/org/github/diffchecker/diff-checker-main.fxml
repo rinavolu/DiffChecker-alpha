@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<StackPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.github.diffchecker.controllers.DiffCheckerController"
-            prefHeight="750.0" prefWidth="1200.0">
-
+<StackPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.github.diffchecker.controllers.DiffCheckerController">
+    <BorderPane prefHeight="200.0" prefWidth="200.0">
+        <left>
+          <ListView fx:id="filesList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+        </left>
+        <center>
+          <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
+        </center>
+        <top>
+            <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
+                <Menu mnemonicParsing="false" text="File">
+                    <MenuItem mnemonicParsing="false" text="Save"/>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Settings">
+                    <MenuItem mnemonicParsing="false" text="Configure"/>
+                </Menu>
+                <Menu mnemonicParsing="false" text="About">
+                    <MenuItem mnemonicParsing="false" text="About"/>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <MenuItem mnemonicParsing="false" text="Help"/>
+                </Menu>
+            </MenuBar>
+        </top>
+    </BorderPane>
 </StackPane>
