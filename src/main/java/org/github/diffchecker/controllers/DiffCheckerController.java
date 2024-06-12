@@ -1,6 +1,6 @@
 package org.github.diffchecker.controllers;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,14 +14,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class DiffCheckerController implements Initializable {
 
     @FXML
-    public ListView<DCFile> filesList;
+    public ListView<DCFile> filesListView;
 
     @FXML
     public TabPane tabPane;
@@ -29,16 +28,19 @@ public class DiffCheckerController implements Initializable {
     @FXML
     public MenuBar menuBar;
 
+    //Menu
+    @FXML
+    public MenuItem saveBtn;
+
+
     private final String CONFIG_FILE = "config.json";
     private final String CONFIG_DIR = "config";
 
-    private ObservableList<DCFile> files;
+    private ObservableList<DCFile> obsFilesList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        files = FXCollections.observableArrayList();
-
-        //dialog box should open and display details
+        //Config
         try {
             loadConfig();
         } catch (IOException e) {
@@ -48,6 +50,10 @@ public class DiffCheckerController implements Initializable {
         //load tabs
         loadTabsAndFiles();
         configureTabPane();
+
+        //Menu
+        initializeMenuItems();
+
     }
 
     private void configureTabPane(){
@@ -56,7 +62,8 @@ public class DiffCheckerController implements Initializable {
         newTabButton.setClosable(false);
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab == newTabButton) {
-                tabPane.getTabs().add(tabPane.getTabs().size() - 1, new Tab("Untitled")); // Adding new tab before the "button" tab
+                Tab tab = createDefaultTab();
+                tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab); // Adding new tab before the "button" tab
                 tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2); // Selecting the tab before the button, which is the newly created one
             }
         });
@@ -70,7 +77,7 @@ public class DiffCheckerController implements Initializable {
         //create config dir & file if doesn't exists
         createConfigIfDoesNotExist(configDirPath, configFilePath);
         //read config file
-        Config config = new Gson().fromJson(Files.readString(configFilePath), Config.class);
+        Config config = new GsonBuilder().setLenient().create().fromJson(Files.readString(configFilePath), Config.class);
         Config.getInstance().setConfig(config);
     }
 
@@ -85,7 +92,8 @@ public class DiffCheckerController implements Initializable {
                 System.out.println("Config file does not exist, creating it");
                 Files.createFile(configFilePath);
                 //Initialize Config
-                initializeDefaultConfigFile(configFilePath);
+                Config.getInstance().saveConfig(configFilePath);
+                //initializeDefaultConfigFile(configFilePath);
             }else{
                 System.out.println("Config file already exists");
             }
@@ -94,34 +102,149 @@ public class DiffCheckerController implements Initializable {
         }
     }
 
-    private void initializeDefaultConfigFile(Path configFilePath) throws IOException {
-        Gson gson = new Gson();
-        String configJson = gson.toJson(Config.getInstance());
-        Files.write(configFilePath, configJson.getBytes(), StandardOpenOption.CREATE);
-        System.out.println("Default config file created");
-    }
-
     private void loadTabsAndFiles() {
+        this.obsFilesList = FXCollections.observableArrayList();
         //For UI
         List<DCFile> activeTabs = Config.getInstance().getActiveTabs();
         tabPane.getTabs().clear();
         for(DCFile activeTab : activeTabs) {
-            tabPane.getTabs().add(new Tab(activeTab.getFileName()));
+            Tab tab = createTab(activeTab.getFileName());
+            tabPane.getTabs().add(tab);
         }
-
-        files.addAll(Config.getInstance().getFiles());
-        filesList.setCellFactory(param -> new ListCell<DCFile>() {
-            @Override
-            protected void updateItem(DCFile item, boolean empty) {
-                super.updateItem(item, empty);
-                if(empty || item == null || item.getFileName() == null) {
-                    //setText(null);
-                }else{
-                    setText(item.getFileName());
+        filesListView.setCellFactory(param -> {
+            ListCell<DCFile> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(DCFile item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(empty || item == null || item.getFileName() == null) {
+                        //setText(null);
+                    }else{
+                        setText(item.getFileName());
+                    }
                 }
-            }
+            };
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem openItem = new MenuItem("Open");
+            openItem.setOnAction(event -> openFileInTabPane(cell.getText()));
+
+            MenuItem deleteItem = new MenuItem("Delete");
+            deleteItem.setOnAction(event -> closeAndDeleteTab(cell.getText()));
+            contextMenu.getItems().addAll(openItem, deleteItem);
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+
+            return cell;
         });
-        filesList.setItems(files);
+        obsFilesList.setAll(Config.getInstance().getFiles());
+        filesListView.setItems(obsFilesList);
     }
 
+    private void initializeMenuItems(){
+        saveBtn.setOnAction(event -> {
+            try {
+                saveTabs();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private void saveTabs() throws IOException {
+         ObservableList<Tab> tabs = tabPane.getTabs();
+         for(Tab tab : tabs) {
+             if(!tab.getText().equals("+")) {
+                 if(isFileExists(tab.getText())) {
+                     System.out.println("File already exists, Ignoring");
+                 }else{
+                     DCFile file = new DCFile(tab.getText(), "", true);
+                     obsFilesList.add(file);
+                     Config.getInstance().addFile(file);
+                 }
+             }
+         }
+         Config.getInstance().saveConfig(Paths.get(CONFIG_DIR, CONFIG_FILE));
+    }
+
+    private boolean isFileExists(String fileName) {
+        for(DCFile file : obsFilesList) {
+            if(file.getFileName().equals(fileName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private DCFile getDCFile(String fileName) {
+        for(DCFile file : obsFilesList) {
+            if(file.getFileName().equals(fileName)){
+                return file;
+            }
+        }
+        return null;
+    }
+
+    private void openFileInTabPane(String fileName) {
+        if(isFileExists(fileName)){
+            DCFile file = getDCFile(fileName);
+            if(!file.isActive()){
+                createAndAddTab(fileName);
+                Config.getInstance().changeTabStatus(fileName, true);
+            } else{
+                //System.out.println("Tab already exists, selecting tab");
+                tabPane.getSelectionModel().select(getTabIndex(fileName));
+            }
+        }
+    }
+
+    private void createAndAddTab(String fileName){
+        Tab tab = createTab(fileName);
+        tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
+        tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2);
+    }
+
+    private Tab createTab(String fileName){
+        Tab tab = new Tab(fileName);
+        tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
+        return tab;
+    }
+
+    private Tab createDefaultTab(){
+        Tab tab = new Tab("Untitled_"+System.currentTimeMillis());
+        tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
+        return tab;
+    }
+
+    private int getTabIndex(String fileName){
+        ObservableList<Tab> tabs = tabPane.getTabs();
+        for(int index=0; index < tabs.size(); index++){
+            if(tabs.get(index).getText().equals(fileName)){
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    private int getObsListIndex(String fileName){
+        for(int index=0; index < obsFilesList.size(); index++){
+            if(obsFilesList.get(index).getFileName().equals(fileName)){
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    private void closeAndDeleteTab(String fileName){
+        int tabIndex = getTabIndex(fileName);
+        if(tabIndex != -1){
+            tabPane.getTabs().remove(tabIndex);
+        }
+        obsFilesList.remove(getObsListIndex(fileName));
+        filesListView.refresh();
+        Config.getInstance().removeFile(fileName);
+    }
 }

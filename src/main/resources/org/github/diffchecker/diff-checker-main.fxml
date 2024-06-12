@@ -11,7 +11,7 @@
 <StackPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.github.diffchecker.controllers.DiffCheckerController">
     <BorderPane prefHeight="200.0" prefWidth="200.0">
         <left>
-          <ListView fx:id="filesList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+          <ListView fx:id="filesListView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
         </left>
         <center>
           <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
@@ -19,7 +19,7 @@
         <top>
             <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
                 <Menu mnemonicParsing="false" text="File">
-                    <MenuItem mnemonicParsing="false" text="Save"/>
+                    <MenuItem mnemonicParsing="false" text="Save" fx:id="saveBtn"/>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Settings">
                     <MenuItem mnemonicParsing="false" text="Configure"/>

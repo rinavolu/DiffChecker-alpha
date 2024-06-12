@@ -1,7 +1,6 @@
 package org.github.diffchecker.model;
 
 import java.time.Instant;
-import java.util.Date;
 
 public class DCFile {
 
@@ -21,10 +20,10 @@ public class DCFile {
         this.filePath = "";
     }
 
-    public DCFile(String fileName, String filePath, String creationDate, boolean isActive) {
+    public DCFile(String fileName, String filePath, boolean isActive) {
         this.fileName = fileName;
         this.filePath = filePath;
-        this.creationDate = creationDate;
+        this.creationDate = Instant.now().toString();
         this.isActive = isActive;
     }
 
