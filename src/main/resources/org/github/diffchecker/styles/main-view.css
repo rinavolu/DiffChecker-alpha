@@ -1,4 +1,4 @@
-/*files ListView CSS */
+/* ~ files ListView CSS ~ */
 
 #filesListView {
     -fx-background-color: #c796e8;
@@ -38,6 +38,31 @@
     -mfx-paused: true;
 }
 
-/* EOF fileListView CSS*/
+/* -- EOF fileListView CSS -- */
 
+/* ~ContextMenu CSS~ */
+
+.context-menu {
+    -fx-background-color: #c7cbd1;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 0;
+    -fx-pref-width: 80;
+}
+
+.menu-item {
+    -fx-padding: 0 5 0 5;
+    -fx-pref-height: 20;
+    /*-fx-border-color: #DDDEE2 transparent #B9C0C8 transparent;
+    -fx-border-width:0.50px;*/
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.menu-item:focused {
+    -fx-background-color: #aeb2b8;
+}
+
+/* -- EOF ContextMenu CSS -- */
 

@@ -4,6 +4,7 @@ module org.github.diffchecker.diffchecker {
     requires MaterialFX;
     requires com.dlsc.gemsfx;
     requires com.google.gson;
+    requires atlantafx.base;
 
 
     opens org.github.diffchecker to javafx.fxml;

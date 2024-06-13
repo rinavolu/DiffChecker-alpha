@@ -132,6 +132,7 @@ public class DiffCheckerController implements Initializable {
     }
 
     private void initializeMenuItems(){
+        menuBar.setUseSystemMenuBar(true);
         saveBtn.setOnAction(event -> {
             try {
                 saveTabs();
