@@ -77,8 +77,7 @@ public class DiffCheckerController implements Initializable {
         //create config dir & file if doesn't exists
         createConfigIfDoesNotExist(configDirPath, configFilePath);
         //read config file
-        Config config = new GsonBuilder().setLenient().create().fromJson(Files.readString(configFilePath), Config.class);
-        Config.getInstance().setConfig(config);
+        Config.getInstance().readConfig(configFilePath);
     }
 
     private void createConfigIfDoesNotExist(Path configDirPath, Path configFilePath) throws IOException {

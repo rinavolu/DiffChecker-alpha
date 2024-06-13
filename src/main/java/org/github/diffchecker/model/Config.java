@@ -1,12 +1,12 @@
 package org.github.diffchecker.model;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +14,8 @@ public class Config {
 
 
     private static Config config;
+
+    private List<DCFile> files;
 
 
     public static synchronized Config getInstance(){
@@ -27,8 +29,6 @@ public class Config {
         this.files.clear();
         this.files.addAll(config.getFiles());
     }
-
-    private List<DCFile> files;
 
     private Config() {
         this.files = FXCollections.observableArrayList();
@@ -79,8 +79,12 @@ public class Config {
     }
 
     public void saveConfig(Path configFilePath) throws IOException {
-        Gson gson = new Gson();
-        String configJson = gson.toJson(Config.getInstance());
+        String configJson = new GsonBuilder().setPrettyPrinting().create().toJson(Config.getInstance());
         Files.write(configFilePath, configJson.getBytes() );
+    }
+
+    public void readConfig(Path configFilePath) throws IOException {
+        Config configFromFile = new GsonBuilder().setPrettyPrinting().create().fromJson(Files.readString(configFilePath), Config.class);
+        this.setConfig(configFromFile);
     }
 }
