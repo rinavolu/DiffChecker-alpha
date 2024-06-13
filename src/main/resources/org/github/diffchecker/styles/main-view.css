@@ -1,7 +1,8 @@
 /* ~ files ListView CSS ~ */
 
 #filesListView {
-    -fx-background-color: #c796e8;
+    /*-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #050505, #c6c914);*/
+    -fx-background-color: #5e5e7e;
     -fx-padding: 4;
 }
 
@@ -21,8 +22,8 @@
 }
 
 #filesListView .virtual-flow .mfx-list-cell .data-label {
-    -fx-text-fill: #fdfdfd;
-    -fx-font-weight: bold;
+    -fx-text-fill: #070303;
+    /*-fx-font-weight: bold;*/
 }
 
 #filesListView .virtual-flow .mfx-list-cell:hover,
