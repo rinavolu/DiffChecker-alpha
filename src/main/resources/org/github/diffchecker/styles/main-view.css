@@ -61,9 +61,41 @@
     -fx-border-radius: 5;
 }
 
+.menu-item .label{
+    -fx-text-fill: black;
+}
+
 .menu-item:focused {
     -fx-background-color: #aeb2b8;
 }
 
 /* -- EOF ContextMenu CSS -- */
+
+/* ~MenuBar CSS~ */
+.menu-bar{
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #050505, #c6c914);
+}
+
+.menu {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.menu:hover {
+    -fx-background-color: #383838;
+}
+
+.menu:showing {
+    -fx-background-color: #383838;
+}
+
+#menuBar .menu .label {
+    -fx-text-fill: white;
+}
+
+#menuBar .menu-item .label{
+    -fx-text-fill: black;
+}
+
+/* -- EOF MenuBar CSS -- */
 
