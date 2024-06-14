@@ -153,3 +153,5 @@
 .tab:selected .tab-close-button {
     -fx-background-color: white;
 }
+
+/* -- EOF TabPane CSS -- */
