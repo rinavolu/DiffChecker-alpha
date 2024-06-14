@@ -73,7 +73,8 @@
 
 /* ~MenuBar CSS~ */
 .menu-bar{
-    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #050505, #c6c914);
+    /*-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #050505, #c6c914);*/
+    -fx-background-color: black;
 }
 
 .menu {
@@ -99,3 +100,56 @@
 
 /* -- EOF MenuBar CSS -- */
 
+/* ~ TabPane CSS ~ */
+
+.tab-header-background{
+    -fx-background-color: transparent;
+}
+
+.tab-header-area {
+    -fx-background-color: black;
+    -fx-pref-height: 25;
+    -fx-padding: 0;
+}
+
+.tab-pane {
+    -fx-background-color: #545252;
+}
+
+.tab{
+    -fx-background-insets: 0 1 0 1,0,0;
+    -fx-background-color: #383838;
+    -fx-border-radius: 7 7 0 0;
+    -fx-background-radius: 7 7 0 0;
+    -fx-pref-height: 25;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #545252;
+}
+
+.tab .tab-label {
+    /*-fx-alignment: CENTER;*/
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    /*-fx-font-size: 12px;*/
+    -fx-font-family: sans-serif;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}
+
+.tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.tab .tab-close-button{
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-effect: none;
+}
+
+.tab:selected .tab-close-button {
+    -fx-background-color: white;
+}
