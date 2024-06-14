@@ -1,0 +1,157 @@
+/* ~ files ListView CSS ~ */
+
+#filesListView {
+    /*-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #050505, #c6c914);*/
+    -fx-background-color: #5e5e7e;
+    -fx-padding: 4;
+}
+
+#filesListView .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+#filesListView .virtual-flow .mfx-list-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+#filesListView .virtual-flow .mfx-list-cell .user-icon {
+    -mfx-color: black;
+}
+
+#filesListView .virtual-flow .mfx-list-cell .data-label {
+    -fx-text-fill: #070303;
+    /*-fx-font-weight: bold;*/
+}
+
+#filesListView .virtual-flow .mfx-list-cell:hover,
+#filesListView .virtual-flow .mfx-list-cell:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+#filesListView .virtual-flow .mfx-list-cell .mfx-ripple-generator {
+    -mfx-auto-clip: true;
+}
+
+#filesListView .virtual-flow .mfx-list-cell:selected .mfx-ripple-generator {
+    -mfx-paused: true;
+}
+
+/* -- EOF fileListView CSS -- */
+
+/* ~ContextMenu CSS~ */
+
+.context-menu {
+    -fx-background-color: #c7cbd1;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 0;
+    -fx-pref-width: 80;
+}
+
+.menu-item {
+    -fx-padding: 0 5 0 5;
+    -fx-pref-height: 20;
+    /*-fx-border-color: #DDDEE2 transparent #B9C0C8 transparent;
+    -fx-border-width:0.50px;*/
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.menu-item .label{
+    -fx-text-fill: black;
+}
+
+.menu-item:focused {
+    -fx-background-color: #aeb2b8;
+}
+
+/* -- EOF ContextMenu CSS -- */
+
+/* ~MenuBar CSS~ */
+.menu-bar{
+    /*-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #050505, #c6c914);*/
+    -fx-background-color: black;
+}
+
+.menu {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.menu:hover {
+    -fx-background-color: #383838;
+}
+
+.menu:showing {
+    -fx-background-color: #383838;
+}
+
+#menuBar .menu .label {
+    -fx-text-fill: white;
+}
+
+#menuBar .menu-item .label{
+    -fx-text-fill: black;
+}
+
+/* -- EOF MenuBar CSS -- */
+
+/* ~ TabPane CSS ~ */
+
+.tab-header-background{
+    -fx-background-color: transparent;
+}
+
+.tab-header-area {
+    -fx-background-color: black;
+    -fx-pref-height: 25;
+    -fx-padding: 0;
+}
+
+.tab-pane {
+    -fx-background-color: #545252;
+}
+
+.tab{
+    -fx-background-insets: 0 1 0 1,0,0;
+    -fx-background-color: #383838;
+    -fx-border-radius: 7 7 0 0;
+    -fx-background-radius: 7 7 0 0;
+    -fx-pref-height: 25;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #545252;
+}
+
+.tab .tab-label {
+    /*-fx-alignment: CENTER;*/
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    /*-fx-font-size: 12px;*/
+    -fx-font-family: sans-serif;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}
+
+.tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.tab .tab-close-button{
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-effect: none;
+}
+
+.tab:selected .tab-close-button {
+    -fx-background-color: white;
+}
+
+/* -- EOF TabPane CSS -- */
