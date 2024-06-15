@@ -1,0 +1,4 @@
+Features Set - 1:
+1. on double click should open tab
+2. if possible a context menu on tab
+3. On tab select highlight file in files list view
