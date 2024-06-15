@@ -1,18 +1,18 @@
 package org.github.diffchecker.controllers;
 
-import io.github.palexdev.materialfx.controls.MFXContextMenu;
 import io.github.palexdev.materialfx.controls.MFXListView;
-import io.github.palexdev.materialfx.controls.cell.MFXListCell;
 import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.util.StringConverter;
 import org.github.diffchecker.factory.DCFileCellFactory;
 import org.github.diffchecker.model.Config;
 import org.github.diffchecker.model.DCFile;
+import org.github.diffchecker.model.enums.ContextMenuType;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,20 +54,22 @@ public class DiffCheckerController implements Initializable {
 
         //load tabs
         loadTabsAndFiles();
-        configureTabPane();
+        addNewTabButtonToTabPane();
+        initialSelectionInFilesListView();
 
         //Menu
         initializeMenuItems();
 
     }
 
-    private void configureTabPane(){
+    private void addNewTabButtonToTabPane(){
         //Adding a tab to create new tabs
         Tab newTabButton = new Tab("+");
         newTabButton.setClosable(false);
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab == newTabButton) {
                 Tab tab = createDefaultTab();
+                tab.setContextMenu(getContextMenu(ContextMenuType.TAB_CONTEXT_MENU));
                 tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab); // Adding new tab before the "button" tab
                 tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2); // Selecting the tab before the button, which is the newly created one
             }
@@ -113,22 +115,20 @@ public class DiffCheckerController implements Initializable {
         tabPane.getTabs().clear();
         for(DCFile activeTab : activeTabs) {
             Tab tab = createTab(activeTab.getFileName());
+            tab.setContextMenu(getContextMenu(ContextMenuType.TAB_CONTEXT_MENU));
             tabPane.getTabs().add(tab);
         }
         StringConverter<DCFile> converter = FunctionalStringConverter.to(file -> (file == null) ? "" : file.getFileName());
         filesListView.setCellFactory(dcFile -> new DCFileCellFactory(filesListView, dcFile));
+        filesListView.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getButton().equals(MouseButton.PRIMARY) && (mouseEvent.getClickCount() == 2)){
+                openSelectedFilesInTabPane();
+            }
+        });
         filesListView.setConverter(converter);
         obsFilesList.setAll(Config.getInstance().getFiles());
         filesListView.setItems(obsFilesList);
-
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem openItem = new MenuItem("Open");
-        openItem.setOnAction(event -> openFilesInTabPane(filesListView.getSelectionModel().getSelection().values().stream().toList()));
-
-        MenuItem deleteItem = new MenuItem("Delete");
-        deleteItem.setOnAction(event -> closeAndDeleteFiles(filesListView.getSelectionModel().getSelection().values().stream().toList()));
-        contextMenu.getItems().addAll(openItem, deleteItem);
-        filesListView.setContextMenu(contextMenu);
+        filesListView.setContextMenu(getContextMenu(ContextMenuType.FILES_LIST_CONTEXT_MENU));
     }
 
     private void initializeMenuItems(){
@@ -180,7 +180,7 @@ public class DiffCheckerController implements Initializable {
         if(isFileExists(fileName)){
             DCFile file = getDCFile(fileName);
             if(!file.isActive()){
-                createAndAddTab(fileName);
+                addFileToTabPane(fileName);
                 Config.getInstance().changeTabStatus(fileName, true);
             } else{
                 //System.out.println("Tab already exists, selecting tab");
@@ -189,11 +189,12 @@ public class DiffCheckerController implements Initializable {
         }
     }
 
-    private void openFilesInTabPane(List<DCFile> filesToOpen){
+    private void openSelectedFilesInTabPane(){
+        List<DCFile> filesToOpen = filesListView.getSelectionModel().getSelection().values().stream().toList();
         for(DCFile fileToOpen : filesToOpen) {
             if(isFileExists(fileToOpen.getFileName())){
                 if(!fileToOpen.isActive()){
-                    createAndAddTab(fileToOpen.getFileName());
+                    addFileToTabPane(fileToOpen.getFileName());
                     Config.getInstance().changeTabStatus(fileToOpen.getFileName(), true);
                 } else{
                     tabPane.getSelectionModel().select(getTabIndex(fileToOpen.getFileName()));
@@ -202,14 +203,16 @@ public class DiffCheckerController implements Initializable {
         }
     }
 
-    private void createAndAddTab(String fileName){
+    private void addFileToTabPane(String fileName){
         Tab tab = createTab(fileName);
+        tab.setContextMenu(getContextMenu(ContextMenuType.TAB_CONTEXT_MENU));
         tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
         tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2);
     }
 
     private Tab createTab(String fileName){
         Tab tab = new Tab(fileName);
+        tab.setOnSelectionChanged(event -> changeSelectionInFilesListView(tab.getText()));
         tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
         return tab;
     }
@@ -258,5 +261,54 @@ public class DiffCheckerController implements Initializable {
             obsFilesList.remove(getObsListIndex(fileName));
             Config.getInstance().removeFile(fileName);
         }
+    }
+
+    private void closeTab(){
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        if(tab != null){
+            Config.getInstance().changeTabStatus(tab.getText(), false);
+            tabPane.getTabs().remove(tab);
+        }
+    }
+
+    private void initialSelectionInFilesListView(){
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        if(tab != null){
+            changeSelectionInFilesListView(tab.getText());
+        }
+    }
+
+    private void changeSelectionInFilesListView(String fileName){
+        DCFile file = getDCFile(fileName);
+        if(file != null){
+            filesListView.getSelectionModel().clearSelection();
+            filesListView.getSelectionModel().selectItem(file);
+        }
+    }
+
+    private ContextMenu getContextMenu(ContextMenuType contextMenuType){
+        ContextMenu contextMenu = new ContextMenu();
+        if(contextMenuType.equals(ContextMenuType.TAB_CONTEXT_MENU)){
+            //Context Menu for tab
+            MenuItem saveItem = new MenuItem("Save");
+
+            MenuItem closeItem = new MenuItem("Close");
+            closeItem.setOnAction(event -> closeTab());
+
+            MenuItem renameItem = new MenuItem("Rename");
+            MenuItem deleteItem = new MenuItem("Delete");
+            contextMenu.getItems().addAll(saveItem, renameItem,closeItem, deleteItem);
+        }
+        else if(contextMenuType.equals(ContextMenuType.FILES_LIST_CONTEXT_MENU)){
+            MenuItem openItem = new MenuItem("Open");
+            openItem.setOnAction(event -> openSelectedFilesInTabPane());
+
+            MenuItem deleteItem = new MenuItem("Delete");
+            deleteItem.setOnAction(event ->
+                    closeAndDeleteFiles(filesListView.getSelectionModel().getSelection().values().stream().toList()));
+            contextMenu.getItems().addAll(openItem, deleteItem);
+        }
+
+        return contextMenu;
     }
 }
