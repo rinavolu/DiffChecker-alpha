@@ -70,10 +70,10 @@ public class Config {
         }
     }
 
-    public void changeTabStatus(String fileName, boolean active){
+    public void changeTabStatus(String fileName, boolean activeStatus){
         for(DCFile file : files){
             if(file.getFileName().equals(fileName)){
-                file.setActive(active);
+                file.setActive(activeStatus);
             }
         }
     }
