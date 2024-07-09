@@ -1,4 +1,16 @@
+-> MainView
 Features Set - 1:
 1. on double click should open tab
 2. if possible a context menu on tab
 3. On tab select highlight file in files list view
+
+Features Set - 2:
+-> Tab Internal View
+1. Four Button Tiles with good UI & transitions
+2. On selecting any tile with proper transition(unique to each tile) should change the scene to respective tile scene
+3. In all tile scene Home button is required
+   If possible : Add extending menu on hover so that user can switch between tiles immediately
+   Use case: User no need to go through home -> new tile. Simply he can switch to another scene from existing scene itself
+4. Based on tile selected file icon should change
+   If possible think of adding * mark for non saved files (@MainView)
+5. Upon opening the file respective tile should be displayed
