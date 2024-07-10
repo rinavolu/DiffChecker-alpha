@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="50.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.github.diffchecker.controllers.menu.TabMenuController">
+   <children>
+      <HBox alignment="CENTER" prefHeight="250.0" prefWidth="800.0" spacing="50.0">
+         <children>
+            <MFXButton prefHeight="300.0" prefWidth="400.0" text="Text Diff Checker" />
+            <MFXButton prefHeight="300.0" prefWidth="400.0" text="Response Diff Checker (curl)" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="250.0" prefWidth="800.0" spacing="50.0">
+         <children>
+            <MFXButton prefHeight="300.0" prefWidth="400.0" text="Directory Diff Checker" />
+            <MFXButton prefHeight="300.0" prefWidth="400.0" text="Table Diff Checker" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+   </padding>
+</VBox>

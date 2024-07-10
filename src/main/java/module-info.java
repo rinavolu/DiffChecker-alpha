@@ -11,6 +11,7 @@ module org.github.diffchecker.diffchecker {
     exports org.github.diffchecker.model;
     exports org.github.diffchecker;
     exports org.github.diffchecker.controllers;
+    exports org.github.diffchecker.controllers.menu;
     opens org.github.diffchecker.model to com.google.gson;
     opens org.github.diffchecker.controllers to javafx.fxml;
 }
