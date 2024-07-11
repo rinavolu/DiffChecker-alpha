@@ -9,9 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.github.diffchecker.controllers.menu.TabMenuController;
 import org.github.diffchecker.factory.DCFileCellFactory;
 import org.github.diffchecker.model.Config;
 import org.github.diffchecker.model.DCFile;
@@ -217,14 +220,14 @@ public class DiffCheckerController implements Initializable {
         Tab tab = new Tab(fileName);
         tab.setOnSelectionChanged(event -> changeSelectionInFilesListView(tab.getText()));
         tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
-        tab.setContent(createMenuNode());
+        tab.setContent(createMenuNode(tab));
         return tab;
     }
 
     private Tab createDefaultTab(){
         Tab tab = new Tab("Untitled_"+System.currentTimeMillis());
         tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
-        tab.setContent(createMenuNode());
+        tab.setContent(createMenuNode(tab));
         return tab;
     }
 
@@ -317,10 +320,13 @@ public class DiffCheckerController implements Initializable {
         return contextMenu;
     }
 
-    VBox createMenuNode(){
+    VBox createMenuNode(Tab tab){
         VBox menuNode;
         try {
-            menuNode = new FXMLLoader(getClass().getResource("/org/github/diffchecker/tab-menu-view.fxml")).load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/github/diffchecker/tab-menu-view.fxml"));
+            menuNode = loader.load();
+            TabMenuController controller = loader.getController();
+            controller.setTab(tab);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
