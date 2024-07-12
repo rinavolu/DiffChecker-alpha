@@ -5,10 +5,13 @@ import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.github.diffchecker.controllers.menu.TabMenuController;
 import org.github.diffchecker.factory.DCFileCellFactory;
 import org.github.diffchecker.model.Config;
 import org.github.diffchecker.model.DCFile;
@@ -214,12 +217,14 @@ public class DiffCheckerController implements Initializable {
         Tab tab = new Tab(fileName);
         tab.setOnSelectionChanged(event -> changeSelectionInFilesListView(tab.getText()));
         tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
+        tab.setContent(createMenuNode(tab));
         return tab;
     }
 
     private Tab createDefaultTab(){
         Tab tab = new Tab("Untitled_"+System.currentTimeMillis());
         tab.setOnClosed(event -> Config.getInstance().changeTabStatus(tab.getText(), false));
+        tab.setContent(createMenuNode(tab));
         return tab;
     }
 
@@ -310,5 +315,18 @@ public class DiffCheckerController implements Initializable {
         }
 
         return contextMenu;
+    }
+
+    VBox createMenuNode(Tab tab){
+        VBox menuNode;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/github/diffchecker/menu/tab-menu-view.fxml"));
+            menuNode = loader.load();
+            TabMenuController controller = loader.getController();
+            controller.setTab(tab);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return menuNode;
     }
 }

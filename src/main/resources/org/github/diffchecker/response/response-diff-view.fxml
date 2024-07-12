@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: white;" alignment="CENTER"
+      fx:controller="org.github.diffchecker.controllers.response.ResponseDiffController"
+      prefHeight="400.0" prefWidth="600.0">
+    <Label alignment="CENTER" text="Response Diff Checker" />
+    <MFXButton fx:id="home_btn" text="Home" />
+
+</HBox>
