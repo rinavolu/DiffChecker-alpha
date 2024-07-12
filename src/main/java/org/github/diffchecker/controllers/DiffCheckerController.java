@@ -9,9 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.github.diffchecker.controllers.menu.TabMenuController;
@@ -323,7 +320,7 @@ public class DiffCheckerController implements Initializable {
     VBox createMenuNode(Tab tab){
         VBox menuNode;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/github/diffchecker/tab-menu-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/github/diffchecker/menu/tab-menu-view.fxml"));
             menuNode = loader.load();
             TabMenuController controller = loader.getController();
             controller.setTab(tab);

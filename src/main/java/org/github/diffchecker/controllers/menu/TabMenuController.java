@@ -4,12 +4,8 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,19 +33,28 @@ public class TabMenuController implements Initializable {
 
     void addBtnClickHandlers(){
         text_diff_checker_btn.setOnAction(event -> switchToScene("text"));
-        response_diff_checker_btn.setDisable(true);
-        directory_diff_checker_btn.setDisable(true);
-        table_diff_checker_btn.setDisable(true);
+        response_diff_checker_btn.setOnAction(event -> switchToScene("response"));
+        directory_diff_checker_btn.setOnAction(event -> switchToScene("directory"));
+        table_diff_checker_btn.setOnAction(event -> switchToScene("table"));
     }
 
     void switchToScene(String type){
         try{
             if(type.equals("text")){
                 HBox text_diff_checker_node = new FXMLLoader(getClass()
-                        .getResource("/org/github/diffchecker/text-diff-view.fxml")).load();
+                        .getResource("/org/github/diffchecker/text/text-diff-view.fxml")).load();
                 tab.setContent(text_diff_checker_node);
+            }else if(type.equals("response")){
+                tab.setContent(new FXMLLoader(getClass().
+                        getResource("/org/github/diffchecker/response/response-diff-view.fxml")).load());
+            } else if (type.equals("directory")) {
+                tab.setContent(new FXMLLoader(getClass().
+                        getResource("/org/github/diffchecker/directory/directory-diff-view.fxml")).load());
+            } else if (type.equals("table")) {
+                tab.setContent(new FXMLLoader(getClass().
+                        getResource("/org/github/diffchecker/table/table-diff-view.fxml")).load());
             }
-        }catch (Exception e){
+        } catch (Exception e){
                 e.printStackTrace();
         }
     }
